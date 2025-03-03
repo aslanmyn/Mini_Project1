@@ -1,0 +1,45 @@
+{% extends "homepage/base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center mb-4">Confirm Trade</h2>
+        <p class="lead text-center">
+            <span class="fw-bold text-primary">{{ trade.offered_product.name }}</span>
+            <i class="fas fa-exchange-alt mx-2 text-warning"></i>
+            <span class="fw-bold text-success">{{ trade.requested_product.name }}</span>
+        </p>
+
+        <div class="row text-center">
+            <div class="col-md-6">
+                <h5 class="text-primary">Trader</h5>
+                <p class="fs-5">{{ trade.trader.username }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5 class="text-success">Customer</h5>
+                <p class="fs-5">{{ trade.customer.username }}</p>
+            </div>
+        </div>
+
+        <form method="post" class="text-center mt-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-lg btn-success px-5">
+                <i class="fas fa-check-circle me-2"></i> Confirm Trade
+            </button>
+            <a href="{% url 'trade_list' %}" class="btn btn-lg btn-secondary px-5 ms-2">
+                <i class="fas fa-times-circle me-2"></i> Cancel
+            </a>
+        </form>
+    </div>
+</div>
+
+<style>
+    .card {
+        max-width: 600px;
+        margin: auto;
+        border-radius: 15px;
+        border: none;
+    }
+</style>
+
+{% endblock %}

@@ -1,0 +1,122 @@
+{% extends "homepage/base.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" crossorigin="anonymous" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Title -->
+            <div class="my-5 text-center">
+                <h3>Create a New Product</h3>
+                <p class="text-muted">Fill out the form to add a new product to your store.</p>
+                <hr>
+            </div>
+
+            <!-- Django Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Form START -->
+            <form method="POST" enctype="multipart/form-data" class="file-upload" onsubmit="return validateForm()">
+                {% csrf_token %}
+                <div class="row mb-5 gx-5">
+                    <!-- Product Details -->
+                    <div class="col-xxl-8 mb-5 mb-xxl-0">
+                        <div class="bg-light px-4 py-5 rounded shadow-sm">
+                            <div class="row g-3">
+                                <h4 class="mb-4">Product Information</h4>
+
+                                <!-- Product Name -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Product Name *</label>
+                                    <input type="text" class="form-control" name="name" id="name" placeholder="Enter product name" required>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Price *</label>
+                                    <input type="number" class="form-control" name="price" id="price" placeholder="Enter price" min="0" required>
+                                </div>
+
+                                <!-- Category -->
+                                <div class="col-md-6">
+                                    <label class="form-label">Category *</label>
+                                    <select class="form-control" name="category" required>
+                                        <option value="" disabled selected>Select category</option>
+                                        {% for category in categories %}
+                                            <option value="{{ category.id }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="col-12">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" name="description" rows="4" placeholder="Enter product description"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upload Product Image -->
+                    <div class="col-xxl-4">
+                        <div class="bg-light px-4 py-5 rounded shadow-sm text-center">
+                            <h4 class="mb-4">Upload Product Image</h4>
+                            <div class="position-relative d-inline-block">
+                                <img id="productPreview" src="https://via.placeholder.com/150" class="rounded border shadow-sm" width="150" height="150" alt="Product Image">
+                            </div>
+                            <div class="mt-3">
+                                <input type="file" id="productImage" name="image" class="d-none" onchange="previewImage(event)" accept="image/*">
+                                <label class="btn btn-success btn-sm me-2" for="productImage">Upload</label>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeImage()">Remove</button>
+                            </div>
+                            <p class="text-muted mt-3"><small>Minimum size: 300px x 300px</small></p>
+                        </div>
+                    </div>
+                </div> <!-- Row END -->
+
+                <!-- Buttons for Create and Cancel -->
+                <div class="d-flex justify-content-end gap-3">
+                    <a href="{% url 'product_list' %}" class="btn btn-secondary btn-lg">Cancel</a>
+                    <button type="submit" class="btn btn-primary btn-lg">Create Product</button>
+                </div>
+            </form> <!-- Form END -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const preview = document.getElementById('productPreview');
+            preview.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function removeImage() {
+        document.getElementById('productPreview').src = "https://via.placeholder.com/150";
+        document.getElementById('productImage').value = "";
+    }
+
+    function validateForm() {
+        const name = document.getElementById('name').value;
+        const price = document.getElementById('price').value;
+
+        if (name.trim() === "" || price.trim() === "") {
+            alert("Please fill out all required fields.");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+{% endblock %}

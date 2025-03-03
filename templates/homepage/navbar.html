@@ -1,0 +1,133 @@
+<nav class="navbar navbar-expand-lg custom-navbar">
+    <div class="container-fluid">
+
+
+        <form class="d-flex search-form" role="search" method="GET" action="{% url 'product_list' %}">
+            <input class="form-control search-input" type="search" name="search" placeholder="Search products..." aria-label="Search" value="{{ search_query }}">
+            <button class="btn search-btn" type="submit">🔍</button>
+        </form>
+
+
+        <a class="navbar-brand mx-auto company-name" href="{% url 'home' %}">TradeConnect</a>
+
+
+        <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Правая часть меню -->
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="{% url 'product_list' %}">Products</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="{% url 'fetch_notifications' %}">Notifications</a>
+                </li>
+
+                {% if not user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'register' %}">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'login' %}">Login</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{% url 'profile' username=user.username %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link logout-btn">Logout</button>
+                        </form>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<style>
+    /* Общие настройки */
+    body {
+        background-color: #f4f4f4; /* Светло-серый фон */
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Navbar */
+    .custom-navbar {
+        background: #1f2937; /* Темно-синий */
+        padding: 12px 18px;
+        border-bottom: 2px solid #374151; /* Тонкая граница */
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Название компании (по центру) */
+    .company-name {
+        font-size: 22px;
+        font-weight: bold;
+        color: #e5e7eb; /* Светло-серый */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Поиск (слева) */
+    .search-form {
+        display: flex;
+        align-items: center;
+    }
+
+    .search-input {
+        background-color: #374151;
+        color: #e5e7eb;
+        border: 1px solid #6b7280;
+        border-radius: 5px;
+        padding: 6px 12px;
+        outline: none;
+    }
+
+    .search-btn {
+        background-color: #2563eb; /* Синий */
+        color: #ffffff;
+        border: none;
+        padding: 6px 12px;
+        margin-left: 5px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .search-btn:hover {
+        background-color: #1d4ed8;
+    }
+
+    /* Меню справа */
+    .nav-link {
+        font-size: 17px;
+        font-weight: 500;
+        color: #e5e7eb !important;
+        transition: 0.3s;
+    }
+
+    .nav-link:hover {
+        color: #93c5fd !important;
+    }
+
+    /* Logout кнопка */
+    .logout-btn {
+        background: none;
+        border: none;
+        color: #f87171;
+        font-size: 17px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .logout-btn:hover {
+        color: #dc2626;
+    }
+</style>
